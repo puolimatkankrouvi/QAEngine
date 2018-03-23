@@ -12,6 +12,6 @@ namespace QAEngine.Models.ThreadModels
 
         public String Title { get; set; }
         public String Text { get; set; }
-        public ApplicationUser poster { get; set; }
+        public ApplicationUser Poster { get; set; }
     }
 }
