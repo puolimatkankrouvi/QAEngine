@@ -2,21 +2,38 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using QAEngine.Models;
 
 namespace QAEngine.Controllers
 {
     public class ThreadController : Controller
     {
-        // GET: Thread
+        QuestionEntities db = new QuestionEntities();
+
+        // GET:Thread
+        [Authorize]
         public ActionResult Index(int id)
         {
+            var questions = from q in db.Questions
+                            where q.id = id
+                            select q;
+            ViewData["Questions"] = questions.toList();
+
+            var answers = from a in db.Answers
+                          where a.id = id
+                          select a;
+
+            ViewData["Answers"] = answers.toList();
+
 
             return View();
         }
 
         // GET: Thread/Create
+        [Authorize]
         public ActionResult Create()
         {
             return View();
