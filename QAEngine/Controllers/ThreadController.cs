@@ -6,27 +6,28 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using QAEngine.Models;
+using QAEngine.Data;
 
 namespace QAEngine.Controllers
 {
     public class ThreadController : Controller
     {
-        QuestionEntities db = new QuestionEntities();
+        ApplicationDbContext db = new ApplicationDbContext();
 
         // GET:Thread
         [Authorize]
         public ActionResult Index(int id)
         {
             var questions = from q in db.Questions
-                            where q.id = id
+                            where q.Id == id
                             select q;
-            ViewData["Questions"] = questions.toList();
+            ViewData["Questions"] = questions;
 
             var answers = from a in db.Answers
-                          where a.id = id
+                          where a.Id == id
                           select a;
 
-            ViewData["Answers"] = answers.toList();
+            ViewData["Answers"] = answers;
 
 
             return View();

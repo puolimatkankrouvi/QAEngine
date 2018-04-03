@@ -5,15 +5,19 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using QAEngine.Models;
+using QAEngine.Models.ThreadModels;
 
 namespace QAEngine.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
+        public ApplicationDbContext()
+            : base()
         {
         }
+
+        public DbSet<QuestionModel> Questions { get; set; }
+        public DbSet<AnswerModel> Answers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
