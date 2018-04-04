@@ -1,0 +1,39 @@
+@* Should there be a class for many questions or controller getting them by SQL? *@
+@using QAEngine.Models.ThreadModels
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <div class="container">
+        <div class="forum-header">
+            <h1>Questions</h1>
+        </div>
+        <div class="forum-body">
+            <div class="threads">
+                @foreach(var thread in ViewData["Threads"] as List<QuestionModel>)
+                {
+                    <div class="thread">
+                        <div class="thread-title">
+                            <a href="/Question/Index/@thread.Id">
+                                <h2>@thread.Title</h2>
+                            </a>
+                        </div>
+                        <div class="thread-poster">
+                            <p>@thread.Poster</p>
+                        </div>
+                    </div>
+
+                }
+            </div>
+        </div>
+    </div>
+</body>
+</html>

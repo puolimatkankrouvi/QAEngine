@@ -10,11 +10,11 @@ using QAEngine.Data;
 
 namespace QAEngine.Controllers
 {
-    public class ThreadController : Controller
+    public class QuestionController : Controller
     {
         ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET:Thread
+        // GET:Question
         [Authorize]
         public ActionResult Index(int id)
         {
@@ -33,14 +33,14 @@ namespace QAEngine.Controllers
             return View();
         }
 
-        // GET: Thread/Create
+        // GET: Question/Create
         [Authorize]
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Thread/Create
+        // POST: Question/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
@@ -57,13 +57,13 @@ namespace QAEngine.Controllers
             }
         }
 
-        // GET: Thread/Edit/5
+        // GET: Question/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: Thread/Edit/5
+        // POST: Question/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -80,13 +80,13 @@ namespace QAEngine.Controllers
             }
         }
 
-        // GET: Thread/Delete/5
+        // GET: Question/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: Thread/Delete/5
+        // POST: Question/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)

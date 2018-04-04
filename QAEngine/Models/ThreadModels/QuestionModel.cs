@@ -8,6 +8,7 @@ namespace QAEngine.Models.ThreadModels
     public class QuestionModel
     {
         public int Id { get; set; }
+        public DateTime Date;
 
         public String Title { get; set; }
         public String Text { get; set; }
