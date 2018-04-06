@@ -26,10 +26,43 @@ namespace QAEngine.Data
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
+
+            
+            //Needed?
+            builder.Entity<ApplicationUser>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.UserName);
+                entity.Property(e => e.PasswordHash);
+                entity.Property(e => e.SecurityStamp);
+            });
+
+            builder.Entity<QuestionModel>(entity =>
+            {
+                entity.HasKey(e => e.ID);
+                entity.Property(e => e.Date).IsRequired();
+                entity.Property(e => e.Title);
+                entity.Property(e => e.Text);
+                //Posters referencing to table Application User?
+                entity.HasOne(e => e.Poster).WithOne(p => p.ApplicationUser);
+
+            });
+
+            builder.Entity<AnswerModel>(entity =>
+            {
+                entity.HasKey(e => e.ID);
+                entity.Property(e => e.Title);
+                entity.Property(e => e.QuestionId).IsRequired();
+                entity.Property(e => e.Text);
+                //Posters referencing to table Application User?
+                entity.Property(e => e.Poster);
+            });
         }
-        protected override OnConfiguring(DbContextOptionsBuilder optionsbuilder)
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsbuilder)
         {
-            optionsbuilder.UseMySQL();
+            //Password not on github
+            Password password = new Password();
+            optionsbuilder.UseMySQL("server=127.0.0.1;user id=QAEngine;database=qadabatase;password=" + password.Pw);
         }
     }
 }

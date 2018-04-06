@@ -19,12 +19,12 @@ namespace QAEngine.Controllers
         public ActionResult Index(int id)
         {
             var questions = from q in db.Questions
-                            where q.Id == id
+                            where q.ID == id
                             select q;
             ViewData["Questions"] = questions;
 
             var answers = from a in db.Answers
-                          where a.Id == id
+                          where a.ID == id
                           select a;
 
             ViewData["Answers"] = answers;

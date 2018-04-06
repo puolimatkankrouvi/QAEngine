@@ -7,7 +7,7 @@ namespace QAEngine.Models.ThreadModels
 {
     public class AnswerModel
     {
-        public int Id { get; set; }
+        public int ID { get; set; }
         public int QuestionId { get; set; }
 
         public String Title { get; set; }
