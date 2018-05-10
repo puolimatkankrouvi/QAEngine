@@ -1,0 +1,16 @@
+CREATE TABLE QUESTIONS(
+id int,
+date datetime,
+title VARCHAR(120),
+text VARCHAR(5000),
+username VARCHAR(120)
+);
+
+CREATE TABLE ANSWERS(
+id int,
+date datetime,
+questionid int,
+title VARCHAR(120),
+text VARCHAR(5000),
+username VARCHAR(120)
+);

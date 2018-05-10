@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -14,15 +15,19 @@ namespace QAEngine.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
-            ApplicationDbContext db = new ApplicationDbContext();
 
-            var threads = from th in db.Questions
-                          orderby th.Date descending
-                          select th;
+            using (ApplicationDbContext db = new ApplicationDbContext())
+            {
+                var threads = from th in db.Questions
+                              orderby th.Date descending
+                              select th;
 
-            ViewData["Threads"] = threads.ToList();
+                ViewData["Threads"] = threads.ToList();
 
-            return View();
+                return View();
+            }
+
+                
         }
     }
 }
