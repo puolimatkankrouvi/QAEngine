@@ -14,3 +14,4 @@ title VARCHAR(120),
 text VARCHAR(5000),
 username VARCHAR(120)
 );
+

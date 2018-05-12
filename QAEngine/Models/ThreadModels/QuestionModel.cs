@@ -14,6 +14,6 @@ namespace QAEngine.Models.ThreadModels
         public String Username { get; set; }
 
         [ForeignKey("Username")]
-        public ApplicationUser Poster {get; set;}
+        public virtual ApplicationUser Poster {get; set;}
     }
 }

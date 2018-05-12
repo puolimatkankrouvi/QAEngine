@@ -3,6 +3,7 @@
 
 QAEngine_kayttajatunnus.txt
 QAEngine/Models/Password.cs
+users.txt
 
 # User-specific files
 *.suo

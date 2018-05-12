@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -30,6 +31,10 @@ namespace QAEngine
                 builder.AddUserSecrets<Startup>();
             }
 
+            var context = new ApplicationDbContext();
+            context.Database.Migrate();
+
+
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
         }
@@ -41,13 +46,21 @@ namespace QAEngine
         {
             // Add framework services.
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseMySQL(Configuration.GetConnectionString("mysqlconn")));
 
             services.AddIdentity<Models.ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
             services.AddMvc();
+
+            services.AddAuthorization( options => {
+                options.AddPolicy("IsAuthorPolicy", policy => 
+                    policy.Requirements.Add(new IsAuthorRequirement())
+                );
+            });
+
+            services.AddSingleton<IAuthorizationHandler, IsAuthorHandler>();
 
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();

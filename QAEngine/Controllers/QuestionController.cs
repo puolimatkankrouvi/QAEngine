@@ -7,30 +7,41 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using QAEngine.Models;
 using QAEngine.Data;
+using System.ComponentModel.DataAnnotations;
+using QAEngine.Models.ThreadModels;
 
 namespace QAEngine.Controllers
 {
+
     public class QuestionController : Controller
     {
-        ApplicationDbContext db = new ApplicationDbContext();
+        private IAuthorizationService authorizationService;
+    
+
+        public QuestionController(IAuthorizationService service, ApplicationDbContext context)
+        {
+            authorizationService = service;
+        }
 
         // GET:Question
         [Authorize]
         public ActionResult Index(int id)
         {
-            var questions = from q in db.Questions
-                            where q.Id == id
-                            select q;
-            ViewData["Questions"] = questions;
+            using (ApplicationDbContext db = new ApplicationDbContext())
+            {
+                var question = db.Questions.FirstOrDefault( q => q.Id == id);
+                ViewData["Question"] = question;
 
-            var answers = from a in db.Answers
-                          where a.Id == id
-                          select a;
+                var answers = db.Answers.
+                        Where(a => a.QuestionId == id)
+                        .ToList();
 
-            ViewData["Answers"] = answers;
+                ViewData["Answers"] = answers;
 
 
-            return View();
+                return View();
+            }
+            
         }
 
         // GET: Question/Create
@@ -41,26 +52,71 @@ namespace QAEngine.Controllers
         }
 
         // POST: Question/Create
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create(IFormCollection collection)
         {
             try
             {
-                // TODO: Add insert logic here
+                using ( ApplicationDbContext context = new ApplicationDbContext())
+                {
+                    string text, title;
 
-                return RedirectToAction("Index");
+                    title = collection["Title"];
+                    text = collection["Text"];
+
+                    var username = User.Identity.Name;
+
+                    var date = DateTime.Now;
+
+                    var poster = context.Users.FirstOrDefault( u => u.UserName == username);
+
+                    QuestionModel question = new QuestionModel() {
+                        Title = title,
+                        Text = text,
+                        Date = date,
+                        Poster = poster
+                    };
+
+                    context.Questions.Add(question);
+
+                    await context.SaveChangesAsync();
+                }
+
+
+                 return RedirectToAction("Index");
             }
-            catch
+            catch(Exception e)
             {
                 return View();
             }
         }
 
         // GET: Question/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            return View();
+            using( ApplicationDbContext context = new ApplicationDbContext())
+            {
+
+                var question = context.Questions.FirstOrDefault();
+
+                var user = User;
+
+                bool authorizationSuccess = await authorizationService.AuthorizeAsync(user, question, "IsAuthorPolicy");
+
+
+                if (authorizationSuccess)
+                {
+                    return View();
+                }
+                else
+                {
+                    return Unauthorized();
+                }
+                
+            }
+            
         }
 
         // POST: Question/Edit/5

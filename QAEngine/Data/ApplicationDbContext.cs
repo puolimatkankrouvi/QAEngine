@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using QAEngine.Models;
 using QAEngine.Models.ThreadModels;
-using MySql.Data.EntityFrameworkCore.Extensions;
-
+using MySql.Data.EntityFrameworkCore;
 namespace QAEngine.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+
+        //Password not on github
+
         public ApplicationDbContext()
             : base()
         {
@@ -19,6 +19,7 @@ namespace QAEngine.Data
 
         public DbSet<QuestionModel> Questions { get; set; }
         public DbSet<AnswerModel> Answers { get; set; }
+        public DbSet<ApplicationUser> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -26,7 +27,7 @@ namespace QAEngine.Data
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
-            
+
             //Needed?
             builder.Entity<ApplicationUser>(entity =>
             {
@@ -57,17 +58,52 @@ namespace QAEngine.Data
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsbuilder)
         {
-            //Password not on github
+            DbContextOptions options = new DbContextOptions<ApplicationDbContext>();
+
+
             Password password = new Password();
-            optionsbuilder.UseMySQL("server=127.0.0.1;user id=QAEngine;database=qadatabase;password=" + password.Pw);
+
+            string connectionString = "server=127.0.0.1;uid=QAEngine;database=qadatabase;SslMode=none;password=" + password.Pw;
+
+            optionsbuilder.UseMySQL(connectionString);
+
+            MigrationBuilder builder = new MigrationBuilder(connectionString);
+
+            
+
         }
 
         // Database working
-        /*public static ApplicationDbContext Create()
+        public ApplicationDbContext Create()
         {
             ApplicationDbContext context = new ApplicationDbContext();
-
             return context;
-        }*/
+        }
     }
+
+    public class MyMigration : Migration
+    {
+        public MyMigration()
+        {
+            
+        }
+
+        protected override void Up(MigrationBuilder builder)
+        {
+
+        }
+    }
+
+    /*
+    public abstract class MyMigrationConfiguration<DbContext> : DbMigrationsConfiguration<DbContext>
+    {
+
+        private MyMigrationConfiguration()
+        {
+            AutomaticMigrationsEnabled = true;  //<<<<<<<<<<<<<<<<<<<
+            AutomaticMigrationDataLossAllowed = true;
+
+        }
+    }
+    */
 }
